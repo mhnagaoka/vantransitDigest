@@ -15,8 +15,7 @@ public class Routes implements RawData{
 	@JsonProperty("routeId")
 	private String route_id;
 	
-	@JsonIgnore
-	// ids as foreign keys will be ignored
+	@JsonProperty("agencyId")
 	private String agency_id;
 
 	@JsonProperty("code")
