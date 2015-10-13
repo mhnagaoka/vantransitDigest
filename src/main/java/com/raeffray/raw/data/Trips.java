@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Trips implements RawData {
 	
-	@JsonIgnore
+	@JsonProperty("routeId")
 	private String route_id;
 	
-	@JsonIgnore
+	@JsonProperty("serviceId")
 	private String service_id;
 	
 	@JsonProperty("tripId")
