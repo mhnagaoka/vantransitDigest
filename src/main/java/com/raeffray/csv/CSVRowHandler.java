@@ -11,5 +11,5 @@ public interface CSVRowHandler {
      *
      * @param row the line represented as a map
      */
-    void processLine(Map<String, String> row);
+    void processLine(Map<String, ? super String> row);
 }

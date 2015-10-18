@@ -24,8 +24,8 @@ public class LoadCSV {
         loader.flush();
         loader.shutdown();
 
-        //match (a:Agency),(r:Routes) where a.agencyId = r.agencyId create a-[rl:OPERATES]->r return rl
-        //match (r:Routes),(t:Trips) where r.routeId = t.routeId create r-[rl:TRAVELS]->t return rl
+        //match (a:Agency),(r:Routes) where a.agency_id = r.agency_id and not(a-->r) create a-[rl:OPERATES]->r return a,r limit 100
+        //match (r:Routes),(t:Trips) where r.route_id = t.route_id and not(r-->t) create r-[rl:TRAVELS]->t return r,t limit 100
         //create index on :Trips(tripId)
         //create index on :StopTimes(tripId)
         //match (t:Trips),(st:StopTimes) where t.tripId = st.tripId create t-[rl:STOPS_AT]->st return rl

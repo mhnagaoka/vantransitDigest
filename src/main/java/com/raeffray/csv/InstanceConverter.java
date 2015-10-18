@@ -20,9 +20,9 @@ public class InstanceConverter<T> implements CSVRowHandler {
     }
 
     @Override
-    public void processLine(Map<String, String> row) {
+    public void processLine(Map<String, ? super String> row) {
         try {
-            T instance = ReflectionData.getInstance().buildInstance(clazz, row);
+            T instance = ReflectionData.getInstance().buildInstance(clazz, (Map<String, String>) row);
             instanceHandler.processInstance(instance);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);

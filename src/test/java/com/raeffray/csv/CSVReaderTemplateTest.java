@@ -26,9 +26,9 @@ public class CSVReaderTemplateTest {
         final List<Map<String, String>> routeInfo = new LinkedList<>();
         csvReaderTemplate.read(reader, new CSVRowHandler() {
             @Override
-            public void processLine(Map<String, String> line) {
+            public void processLine(Map<String, ? super String> line) {
                 System.out.println(line);
-                routeInfo.add(line);
+                routeInfo.add((Map<String, String>) line);
             }
         });
         assertThat(routeInfo.size(), is(equalTo(2)));

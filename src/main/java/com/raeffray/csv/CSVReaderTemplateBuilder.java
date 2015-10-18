@@ -28,10 +28,10 @@ public class CSVReaderTemplateBuilder<T> {
     /**
      * Reads the CSV and calls the {@code handler}.
      *
-     * @param handler handler to be called on each line read
+     * @param rowHandler {@link CSVRowHandler} to be called on each line read
      * @throws IOException error reading the CSV file
      */
-    public void processWith(InstanceHandler<? super T> handler) throws IOException {
+    public void processWith(CSVRowHandler rowHandler) throws IOException {
         String csvPath = Configuration.getConfigurationForClass(clazz)
                 .getString("csv.path");
 
@@ -41,7 +41,17 @@ public class CSVReaderTemplateBuilder<T> {
         } else {
             stream = new BOMInputStream(new FileInputStream(csvPath));
         }
-        template.read(new InputStreamReader(stream), new InstanceConverter<>(clazz, handler));
+        template.read(new InputStreamReader(stream), rowHandler);
+    }
+
+    /**
+     * Reads the CSV and calls the {@code instanceHandler}.
+     *
+     * @param instanceHandler {@link InstanceHandler} to be called on each line read
+     * @throws IOException error reading the CSV file
+     */
+    public void processWith(InstanceHandler<? super T> instanceHandler) throws IOException {
+        processWith(new InstanceConverter<>(clazz, instanceHandler));
     }
 
     private CSVReaderTemplateBuilder(final Class<T> clazz) {
