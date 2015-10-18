@@ -10,6 +10,8 @@ import org.neo4j.unsafe.batchinsert.BatchInserter;
 import org.neo4j.unsafe.batchinsert.BatchInserters;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.raeffray.csv.CSVReaderTemplateBuilder.readCSVForClass;
 import static org.neo4j.graphdb.DynamicLabel.label;
@@ -28,17 +30,18 @@ public class LoadCSVBatchInsert {
         try {
             inserter = BatchInserters.inserter(
                     new File("import").getAbsolutePath());
+            Map<String, Long> nodeIdMap = new HashMap<>(); // map no formato: "agency_id=<agency id>" -> "<agency nodeId>"
             inserter.createDeferredSchemaIndex(agency).on("agency_id");
-            readCSVForClass(Agency.class).processWith(new BatchInsertLoader(inserter, agency));
+            readCSVForClass(Agency.class).processWith(new BatchInsertLoader(inserter, nodeIdMap, agency));
             inserter.createDeferredSchemaIndex(routes).on("agency_id");
             inserter.createDeferredSchemaIndex(routes).on("route_id");
-            readCSVForClass(Routes.class).processWith(new BatchInsertLoader(inserter, routes));
+            readCSVForClass(Routes.class).processWith(new BatchInsertLoader(inserter, nodeIdMap, routes));
             inserter.createDeferredSchemaIndex(trips).on("route_id");
             inserter.createDeferredSchemaIndex(trips).on("trip_id");
-            readCSVForClass(Trips.class).processWith(new BatchInsertLoader(inserter, trips));
+            readCSVForClass(Trips.class).processWith(new BatchInsertLoader(inserter, nodeIdMap, trips));
             inserter.createDeferredSchemaIndex(stopTimes).on("trip_id");
             inserter.createDeferredSchemaIndex(stopTimes).on("stop_id");
-            readCSVForClass(StopTimes.class).processWith(new BatchInsertLoader(inserter, stopTimes));
+            readCSVForClass(StopTimes.class).processWith(new BatchInsertLoader(inserter, nodeIdMap, stopTimes));
         } finally {
             if (inserter != null) {
                 inserter.shutdown();
